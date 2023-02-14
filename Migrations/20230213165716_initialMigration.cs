@@ -122,7 +122,7 @@ namespace PokemonReviewApp.Migrations
                     Text = table.Column<string>(type: "text", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     ReviewerId = table.Column<int>(type: "integer", nullable: false),
-                    PokemonId = table.Column<int>(type: "integer", nullable: true)
+                    PokemonId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -131,7 +131,8 @@ namespace PokemonReviewApp.Migrations
                         name: "FK_Reviews_Pokemons_PokemonId",
                         column: x => x.PokemonId,
                         principalTable: "Pokemons",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reviews_Reviewers_ReviewerId",
                         column: x => x.ReviewerId,

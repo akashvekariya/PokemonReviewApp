@@ -4,35 +4,45 @@ using PokemonReviewApp.Data;
 using PokemonReviewApp.Interfaces;
 using PokemonReviewApp.Repository;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args); {
+	builder.Services.AddControllers();
 
-// Add services to the container.
+	// to add the seed data
+	builder.Services.AddTransient<Seed>();
 
-builder.Services.AddControllers();
-builder.Services.AddTransient<Seed>();
+	// to add the automapper
+	builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+	builder.Services.AddEndpointsApiExplorer();
+	builder.Services.AddSwaggerGen();
+
+	// to add the database and context
+	builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+	// to add the repository | dependency injection
+	builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+	builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+	builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+	builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+	builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+	builder.Services.AddScoped<IReviewerRepository, ReviewerRepository>();
+
+}
 
 var app = builder.Build();
 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); {
+	if (args.Length == 1 && string.Equals(args[0], "seeddata", StringComparison.OrdinalIgnoreCase))
+		SeedData(app);
 
-if (args.Length == 1 && string.Equals(args[0], "seeddata", StringComparison.OrdinalIgnoreCase))
-	SeedData(app);
-
-void SeedData(IHost app) {
-	var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
-
-	using var scope = scopedFactory.CreateScope();
-	var service = scope.ServiceProvider.GetService<Seed>();
-	service.SeedDataContext();
+	void SeedData(IHost app) {
+		var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+		using var scope = scopedFactory.CreateScope();
+		var service = scope.ServiceProvider.GetService<Seed>();
+		service.SeedDataContext();
+	}
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();

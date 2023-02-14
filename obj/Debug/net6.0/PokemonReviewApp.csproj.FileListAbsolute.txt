@@ -54,3 +54,5 @@
 /Volumes/Work/PokemonReviewApp/bin/Debug/net6.0/runtimes/browser/lib/net6.0/System.Text.Encodings.Web.dll
 /Volumes/Work/PokemonReviewApp/bin/Debug/net6.0/Microsoft.EntityFrameworkCore.Relational.Design.dll
 /Volumes/Work/PokemonReviewApp/bin/Debug/net6.0/Npgsql.EntityFrameworkCore.PostgreSQL.Design.dll
+/Volumes/Work/PokemonReviewApp/bin/Debug/net6.0/AutoMapper.dll
+/Volumes/Work/PokemonReviewApp/bin/Debug/net6.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll

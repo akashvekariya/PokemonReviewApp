@@ -12,7 +12,7 @@ using PokemonReviewApp.Data;
 namespace PokemonReviewApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230213063355_initialMigration")]
+    [Migration("20230213165716_initialMigration")]
     partial class initialMigration
     {
         /// <inheritdoc />
@@ -147,7 +147,7 @@ namespace PokemonReviewApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("PokemonId")
+                    b.Property<int>("PokemonId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Rating")
@@ -245,15 +245,19 @@ namespace PokemonReviewApp.Migrations
 
             modelBuilder.Entity("PokemonReviewApp.Models.Review", b =>
                 {
-                    b.HasOne("PokemonReviewApp.Models.Pokemon", null)
+                    b.HasOne("PokemonReviewApp.Models.Pokemon", "Pokemon")
                         .WithMany("Reviews")
-                        .HasForeignKey("PokemonId");
+                        .HasForeignKey("PokemonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PokemonReviewApp.Models.Reviewer", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Pokemon");
 
                     b.Navigation("Reviewer");
                 });
